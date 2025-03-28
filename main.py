@@ -11,6 +11,8 @@ running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            new_bunny.hit()
     dt = time.time() - start
     start = time.time()
 
