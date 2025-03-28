@@ -5,22 +5,35 @@ from display import *
 start = time.time()
 clock = pygame.time.Clock()
 
-new_bunny = Bunny((0,668))
+bunny_group = []
+
+for i in range(3):
+    bunny_group.append(Bunny((i*70,668), (10, -20)))
 
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            new_bunny.hit()
     dt = time.time() - start
     start = time.time()
 
-    # fill background
-    screen.fill((27, 66, 52))
-    new_bunny.update()
-    new_bunny.draw(screen)
+    if pygame.mouse.get_pressed()[0]:
+        mousepos = pygame.mouse.get_pos()
+        for bunny in bunny_group:
+            if bunny.rect.collidepoint(mousepos):
+                bunny.hit()
 
+    # fill background
+    screen.blit(background1_img, (0,0))
+
+
+    for bunny in bunny_group:
+        bunny.update()
+    for bunny in bunny_group:
+        bunny.draw(screen)
+
+    #Draw overlay
+    screen.blit(overlay1_img, (0,0))
 
     pygame.display.flip()
     clock.tick(60)

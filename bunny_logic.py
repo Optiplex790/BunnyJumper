@@ -17,9 +17,9 @@ for i in range(3):
     bunny_parts[i].blit(bunny_spritesheet, (-i * 70, 0))
 
 class Bunny():
-    def __init__(self,position):
+    def __init__(self,position, force = (0,0)):
         #Handle image info
-        scale = 1.5
+        scale = 1
 
         #Bunny itself
         self.head_img = bunny_parts[0]
@@ -37,46 +37,50 @@ class Bunny():
 
         #Handle rect info
         self.rect = self.body_img.get_frect()
-        self.rect.scale_by(1.1, 1.1)
+        self.rect.scale_by(0.6, 0.6)
         self.rect.x = position[0]
         self.rect.y = position[1]
 
         #Handle other variables
-        self.xaccel = 20
-        self.yaccel = -20
+        self.xaccel = force[0]
+        self.yaccel = force[1]
         self.caught = 0
         self.time = pygame.time.get_ticks()
 
     def update(self):
         #Physics
-        #self.yaccel += 0.4
-        self.xaccel *= 0.99
-        self.yaccel *= 0.99
+        self.yaccel += 0.3
+        self.xaccel *= 0.995
+        self.yaccel *= 0.995
 
         self.rect.x += self.xaccel
         self.rect.y += self.yaccel
 
         #Caught Animation
-        if self.caught != 0 and self.caught != 18:
-            self.caught += 1
         if self.caught >= 18:
             if pygame.time.get_ticks() - self.time >= 200:
                 self.time = pygame.time.get_ticks()
-                self.caught = random.randint(18,18)
+                self.caught = random.randint(1,3)
+                self.caught *= 3
+                self.caught += 15
+        if 0 < self.caught <= 18:
+            self.caught += 1
 
-        self.xaccel = 0
-        self.yaccel = 0
+        #Caught bounce off walls
+        if self.caught != 0:
+            if self.rect.x+40 >= screen_width or self.rect.x+30 <= 0:
+                self.xaccel *= -0.9
 
 
     def hit(self):
-        if not self.caught:
+        if self.caught == 0:
             self.xaccel = random.randint(-4,4)
             self.yaccel = -10
-            self.caught = True
+            self.caught = 1
 
     def draw(self, screen):
         if self.caught != 0:
-            screen.blit(self.hit_frames[math.floor(self.caught/3)+9], (self.rect.x, self.rect.y))
+            screen.blit(self.hit_frames[math.floor(self.caught/3)], (self.rect.x, self.rect.y))
             screen.blit(self.tail_img, (self.rect.x - (self.xaccel/100)*10, self.rect.y - (self.yaccel/100)*10))
             screen.blit(self.body_img, (self.rect.x, self.rect.y))
             screen.blit(self.head_img, (self.rect.x-(self.xaccel/100)*10, self.rect.y-(self.yaccel/100)*10))
@@ -85,5 +89,3 @@ class Bunny():
             screen.blit(self.tail_img, (self.rect.x - self.xaccel * 0.5, self.rect.y - self.yaccel * 0.5))
             screen.blit(self.body_img, (self.rect.x, self.rect.y))
             screen.blit(self.head_img, (self.rect.x - self.xaccel * 0.5, self.rect.y - self.yaccel * 0.5))
-
-#TODO: CHANGE HIT ANIMATION IMAGE TO BE INSIDE OF UPDATE INSTEAD OF DRAW
