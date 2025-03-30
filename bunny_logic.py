@@ -17,7 +17,7 @@ for i in range(3):
     bunny_parts[i].blit(bunny_spritesheet, (-i * 70, 0))
 
 class Bunny():
-    def __init__(self,position, force = (0,0)):
+    def __init__(self,position, force = (0,0), delay = 0):
         #Handle image info
         scale = 1
 
@@ -42,34 +42,43 @@ class Bunny():
         self.rect.y = position[1]
 
         #Handle other variables
+        self.delay = delay
         self.xaccel = force[0]
         self.yaccel = force[1]
         self.caught = 0
         self.time = pygame.time.get_ticks()
+        self.lasty = 0
 
     def update(self):
-        #Physics
-        self.yaccel += 0.3
-        self.xaccel *= 0.995
-        self.yaccel *= 0.995
+        if self.delay != 0:
+            self.delay -= 1
+        else:
+            #Physics
+            self.yaccel += 0.3
+            self.xaccel *= 0.995
+            self.yaccel *= 0.995
 
-        self.rect.x += self.xaccel
-        self.rect.y += self.yaccel
+            self.rect.x += self.xaccel
+            self.rect.y += self.yaccel
 
-        #Caught Animation
-        if self.caught >= 18:
-            if pygame.time.get_ticks() - self.time >= 200:
-                self.time = pygame.time.get_ticks()
-                self.caught = random.randint(1,3)
-                self.caught *= 3
-                self.caught += 15
-        if 0 < self.caught <= 18:
-            self.caught += 1
+            #Caught Animation
+            if self.caught >= 18:
+                if pygame.time.get_ticks() - self.time >= 200:
+                    self.time = pygame.time.get_ticks()
+                    self.caught = random.randint(1,3)
+                    self.caught *= 3
+                    self.caught += 15
+            if 0 < self.caught <= 18:
+                self.caught += 1
 
-        #Caught bounce off walls
-        if self.caught != 0:
-            if self.rect.x+40 >= screen_width or self.rect.x+30 <= 0:
-                self.xaccel *= -0.9
+            #Caught bounce off walls
+            if self.caught != 0:
+                if self.rect.x+40 >= screen_width or self.rect.x+30 <= 0:
+                    self.xaccel *= -0.9
+
+            #print(f"{self.rect.x}, {self.rect.y}")
+
+            self.lasty = self.rect.y
 
 
     def hit(self):
