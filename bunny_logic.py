@@ -37,7 +37,7 @@ class Bunny():
 
         #Handle rect info
         self.rect = self.body_img.get_frect()
-        self.rect.scale_by(0.6, 0.6)
+        self.hitbox = pygame.Rect(position, (30, 25))
         self.rect.x = position[0]
         self.rect.y = position[1]
 
@@ -60,6 +60,7 @@ class Bunny():
 
             self.rect.x += self.xaccel
             self.rect.y += self.yaccel
+            self.hitbox.topleft = (self.rect.x+20, self.rect.y+35)
 
             #Caught Animation
             if self.caught >= 18:
@@ -72,9 +73,8 @@ class Bunny():
                 self.caught += 1
 
             #Caught bounce off walls
-            if self.caught != 0:
-                if self.rect.x+40 >= screen_width or self.rect.x+30 <= 0:
-                    self.xaccel *= -0.9
+            if self.rect.x+40 >= screen_width-21 or self.rect.x+30 <= 21:
+                self.xaccel *= -0.9
 
             #print(f"{self.rect.x}, {self.rect.y}")
 
@@ -86,6 +86,8 @@ class Bunny():
             self.xaccel = random.randint(-4,4)
             self.yaccel = -10
             self.caught = 1
+            return 1
+        return 0
 
     def draw(self, screen):
         if self.caught != 0:
