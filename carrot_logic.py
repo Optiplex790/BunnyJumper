@@ -1,4 +1,4 @@
-import pygame, math, random
+import random
 from display import *
 
 class Carrot():

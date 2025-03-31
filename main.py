@@ -1,9 +1,6 @@
-import random
-
-import pygame, time
+import time
 import pygame.freetype
 from levels import *
-from display import *
 from carrot_logic import *
 
 

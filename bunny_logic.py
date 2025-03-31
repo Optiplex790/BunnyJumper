@@ -1,4 +1,4 @@
-import pygame, math, random
+import random
 from display import *
 
 #Break apart sprite sheet into different frames in a list
