@@ -2,7 +2,7 @@ import pygame, math
 
 screen_width = 1024
 screen_height = 768
-screen = pygame.display.set_mode((screen_width, screen_height), flags=pygame.SRCALPHA, vsync=1)
+screen = pygame.display.set_mode((screen_width, screen_height))
 
 def animation_list(frames, width, height, image, length=0):
     img_list = []
